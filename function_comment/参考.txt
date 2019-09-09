@@ -1,0 +1,2 @@
+参考以下博文，写了一个超简易的注释插件：
+https://www.cnblogs.com/liuxianan/p/vscode-plugin-hello-world.html

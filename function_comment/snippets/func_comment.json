@@ -1,0 +1,16 @@
+{
+    "func_comment": {
+        "prefix": "/*",
+        "body": [
+            "/**",
+            " * Tell_me_what_is_this",
+            " * ",
+            " * @params[in]  AAA:",
+            " * @params[out] BBB:",
+            " * ",
+            " * @return CCC, NULL if",
+            "*/"
+        ],
+        "description": "函数注释模板"
+    }
+}

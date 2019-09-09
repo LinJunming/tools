@@ -1,0 +1,35 @@
+{
+    "name": "function-comment",
+    "displayName": "function comment",
+    "description": "函数注释",
+    "keywords": [
+        "document"
+    ],
+    "version": "0.0.1",
+    "publisher": "ljm",
+    "engines": {
+        "vscode": "^1.27.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:extension.func_comment"
+    ],
+    "main": "./src/extension",
+    "contributes": {
+        "snippets": [
+            {
+                "language": "c",
+                "path": "./snippets/func_comment.json"
+            }
+        ]
+    },
+    "devDependencies": {
+        "typescript": "^2.6.1",
+        "vscode": "^1.1.6",
+        "eslint": "^4.11.0",
+        "@types/node": "^7.0.43",
+        "@types/mocha": "^2.2.42"
+    }
+}
