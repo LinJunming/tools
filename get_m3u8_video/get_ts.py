@@ -1,7 +1,9 @@
+from multiprocessing import Pool
 import requests
 import re
 import os
 
+## 36个url
 url_list=[
     'https://sina.com-h-sina.com/20180906/18215_c0fc8873/' ,
     'https://sina.com-h-sina.com/20180906/18216_80a7de01/' ,
@@ -40,11 +42,16 @@ url_list=[
     'https://sina.com-h-sina.com/20180906/18249_b750a51f/' ,
     'https://cdn.youku-letv.net/20181130/11189_acdfba0e/'
 ]
+
 ## [注意]正阳门下的视频的第一个m3u8是指向另一个m3u8，并不是直接指向ts媒体分片
 index='index.m3u8'
 savefile_path='E://Downloads//ZhengYangMenXia//'
 
-for i in range(0,len(url_list)):
+
+
+def download_task(n):
+    i = int(n)
+    print('task %d start!' % i)
     # os.mkdir(savefile_path+str(i)+'//')   ## 创建文件夹。如果手动创建了文件夹，那就注释掉这一句
     data=requests.get(url_list[i]+index)
 
@@ -55,7 +62,7 @@ for i in range(0,len(url_list)):
 
     data = requests.get(url_list[i] + m3u8)
     '''
-    # 保存m3u8文件。注释掉，就不存了。
+    # 保存m3u8文件。此处注释掉，m3u8的内容就不存了。
     file=open(savefile_path+str(i)+'//'+index, 'w')
     file.write(data.text)
     file.close()
@@ -63,10 +70,23 @@ for i in range(0,len(url_list)):
     lines=str.split(data.text,'\n')
     pattern=r".*ts"
     # 保存ts文件(注意，是二进制的)
-    video = open(savefile_path + str(i) + '//' + '正阳门下-' + str(i).zfill(3) + '.mp4', 'wb')
+    video = open(savefile_path + '//' + '正阳门下-' + str(i).zfill(3) + '.mp4', 'wb')
     for j in range(0,len(lines)):
         if re.match(pattern,lines[j]):
-            print("Downloading %s..." % lines[j])
+            print("Task %d Downloading %s..." % (i, lines[j]))
             data = requests.get(url_list[i]+m3u8_directory+lines[j])
             video.write(data.content)
     video.close()
+    print('Task %d done!' % i)
+
+
+
+if __name__=='__main__':                    ## 多进程程序，一定要有main函数。
+    pool=Pool(4)                            ## 4进程下载
+    for i in range(0,len(url_list)):
+        pool.apply_async(download_task, args=(i,))
+        print('Task %d has been submited' % i)
+    print('Waiting for all subprocesses done...')
+    pool.close()
+    pool.join()
+    print('All subprocesses done.')
